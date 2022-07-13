@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import UserManager, PermissionsMixin
 from django.db import models
@@ -5,14 +7,36 @@ from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractBaseUser, PermissionsMixin):  # PermissionsMixin
+    GENDER_CHO0ICE = (
+        ('male', 'male'),
+        ('female', 'female'),
+    )
+
+    REGION_CHOICE = (
+        ('Tashkent', 'Tashkent'),
+        ('Tashkent region', 'Tashkent region'),
+        ('Andijan', 'Andijan'),
+        ('Bukhara', 'Bukhara'),
+        ('Fergana', 'Fergana'),
+        ('Jizzakh', 'Jizzakh'),
+        ('Xorazm', 'Xorazm'),
+        ('Namangan', 'Namangan'),
+        ('Navoiy', 'Navoiy'),
+        ('Qashqadaryo', 'Qashqadaryo'),
+        ('Samarkand', 'Samarkand'),
+        ('Sirdaryo', 'Sirdaryo'),
+        ('Surxondaryo', 'Surxondaryo'),
+    )
+
     objects = UserManager()
-    first_name = models.CharField(
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    firstname = models.CharField(
         _("first name"),
         max_length=150,
         blank=True,
         null=True
     )
-    last_name = models.CharField(
+    lastname = models.CharField(
         _("last name"),
         max_length=150,
         blank=True,
@@ -30,9 +54,9 @@ class User(AbstractBaseUser, PermissionsMixin):  # PermissionsMixin
     )
     username = models.CharField(
         _('username'),
-        max_length=150,
+        max_length=100,
         unique=True,
-        help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
+        help_text=_('Required. 100 characters or fewer. Letters, digits and @/./+/-/_ only.'),
         error_messages={
             'unique': _("A user with that username already exists."),
         },
@@ -53,6 +77,32 @@ class User(AbstractBaseUser, PermissionsMixin):  # PermissionsMixin
             "Unselect this instead of deleting account."
         ), null=True, blank=True
     )
+
+    gender = models.CharField(
+        max_length=10,
+        choices=GENDER_CHO0ICE,
+        null=True,
+        blank=True
+    )
+
+    region = models.CharField(
+        max_length=50,
+        choices=REGION_CHOICE,
+        null=True,
+        blank=True
+    )
+
+    phone = models.PositiveBigIntegerField(
+        null=True,
+        blank=True
+    )
+
+    passport = models.ImageField(
+        upload_to='passports/',
+        null=True,
+        blank=True
+    )
+
     date_joined = models.DateTimeField(
         _("date joined"),
         auto_now=True,
@@ -77,16 +127,16 @@ class User(AbstractBaseUser, PermissionsMixin):  # PermissionsMixin
         """
         Return the first_name plus the last_name, with a space in between.
         """
-        full_name = "%s %s" % (self.first_name, self.last_name)
+        full_name = "%s %s" % (self.firstname, self.lastname)
         return full_name.strip()
 
     def get_short_name(self):
         """Return the short name for the user."""
-        return self.first_name
+        return self.firstname
 
     def update_profile(self, validated_data):
-        self.first_name = validated_data.get("first_name", self.first_name)
-        self.last_name = validated_data.get("last_name", self.last_name)
+        self.firstname = validated_data.get("first_name", self.firstname)
+        self.lastname = validated_data.get("last_name", self.lastname)
         self.profile_image = validated_data.get(
             "profile_image", self.profile_image
         )
