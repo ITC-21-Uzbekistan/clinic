@@ -44,11 +44,11 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # apps
-    'apps.doctor',
     'apps.patient',
     'apps.direction',
     'apps.employee',
     'apps.schedule',
+    'apps.enrollment',
 ]
 
 MIDDLEWARE = [
