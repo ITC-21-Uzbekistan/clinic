@@ -9,7 +9,5 @@ class Patient(models.Model):
     potent_history = models.ImageField(null=True, blank=True)
     analis_history = models.ImageField(null=True, blank=True)
 
-
-
     class Meta:
         db_table = 'patient'

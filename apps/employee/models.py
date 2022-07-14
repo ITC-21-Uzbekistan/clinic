@@ -1,6 +1,7 @@
 from django.db import models
 
 from auth_user.models import User
+from apps.direction.models import Direction
 
 
 class Employee(models.Model):
@@ -23,6 +24,12 @@ class Employee(models.Model):
         blank=True
     )
     room_number = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+    direction = models.ForeignKey(
+        Direction,
+        on_delete=models.CASCADE,
         null=True,
         blank=True
     )
