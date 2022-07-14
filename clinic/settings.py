@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'apps.employee',
     'apps.schedule',
     'apps.enrollment',
+    'apps.service',
 ]
 
 MIDDLEWARE = [
